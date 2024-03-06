@@ -1,3 +1,5 @@
+**Group Members**: Nicole Chen, Jilienne Widener, Connor Yew
+
 **Project Proposal**: For our CLPS0950 Group Project, we will be creating a program that presents the user with a simulated game of BlackJack and allows them to input actions (ie. hold, stay, double-down, surrender, and split) that they would like to take in order to beat the dealer and win the round. Additionally, we will be coding another program that provides recommendations based on the principles of "Basic Strategy" for each hand. These recommendations help to limit the casino's edge over a player to < 1% when properly implemented, and they can be found in a table format at the following link: https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
 
 **Rules of BlackJack**
