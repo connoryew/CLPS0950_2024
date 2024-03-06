@@ -15,4 +15,5 @@
 8. If the player and dealer have NOT busted AND they have cards that sum up to the same value, the result is a PUSH, where neither party wins the round.
 
 **Summary of Basic Strategy**
-• 
+
+1. 
