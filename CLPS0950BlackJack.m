@@ -1,14 +1,13 @@
 % CLPS0950 Group Project: Blackjack (w/ Basic Strategy Recommendations)
 % Group Members: Nicole Chen, Jilienne Widener, Connor Yew
 
-% Start with shuffle deck
+%blackjack
+%start with shuffle deck
 shuffle_card = randperm(52);
-
 % Initialize player and dealer hands
 player_raw_hand = shuffle_card(1:2:3); % dealer gives first and third card to player
 dealer_raw_hand = shuffle_card(2:2:4); % dealer takes second and fourth for themselves
-
-% Card values
+%card values
 card_value = zeros(1,52); %initialize our card values with 0
 for card_number = 1:52
     posit_value = mod(card_number, 13); %posit or position value is the deck position, that we need to map to the game value
@@ -26,26 +25,25 @@ player_hand = card_value(player_raw_hand) %turning the raw hand straight from th
 player_total = sum(card_value(player_raw_hand)) %totalling the two cards player has
 dealer_hand = card_value(dealer_raw_hand); %turning raw hand from deck into cards with meaning
 dealer_first_card = card_value(dealer_hand(1)) %show only the first card of the dealer
-
-if dealer_first_card == (2:6)
-    if player_total == (13:17)
+dealer_first_card = 3
+player_total = 12
+if dealer_first_card >= 2 && dealer_first_card <=6
+    if player_total >= 13 && player_total <=17
         disp('stand');
     elseif player_total == 12 && dealer_first_card == 2 || dealer_first_card == 3
         disp('hit');
     elseif player_total == 12 && dealer_first_card == 4 || dealer_first_card == 5 || dealer_first_card == 6
         disp('stand');
     end
-elseif dealer_first_card == 7:11
-    if player_total == 17
+elseif dealer_first_card >= 7 && dealer_first_card <= 11
+    if player_total == 17;
         disp('stand');
-    elseif player_total == (12:16)
-        disp('stand');
+    elseif player_total >= 12 && player_total <=16
+        disp('hit');
     end
 end
        
-%current place: player totals are falling outside ranges, code isn't
-%continuing --> need to add more else/if conditions ideally in loops bc
-%this is probably inefficient. for now, i've coded the hard totals from
-%12-17 of player card and 2-A of dealer upcard (looking at the strat
-%chart). Also need to make sure the code is displaying what it's supposed
-%to
+%current place: upper half of strategy is coded (12-17 player total, dealer
+%upcard 2-11)
+%what's left in near future: player total above 17, player total below 11 --> coding the
+%strategy
