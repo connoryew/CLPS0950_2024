@@ -26,9 +26,11 @@ player_total = sum(card_value(player_raw_hand)) %totalling the two cards player 
 dealer_hand = card_value(dealer_raw_hand); %turning raw hand from deck into cards with meaning
 dealer_first_card = card_value(dealer_hand(1)) %show only the first card of the dealer
 dealer_first_card = 3
-player_total = 12
+player_total = 18
 if dealer_first_card >= 2 && dealer_first_card <=6
-    if player_total >= 13 && player_total <=17
+    if player_total > 17 
+        disp('stand')  
+    elseif player_total >= 13 && player_total <=17
         disp('stand');
     elseif player_total == 12 && dealer_first_card == 2 || dealer_first_card == 3
         disp('hit');
@@ -36,11 +38,10 @@ if dealer_first_card >= 2 && dealer_first_card <=6
         disp('stand');
     end
 elseif dealer_first_card >= 7 && dealer_first_card <= 11
-    if player_total == 17;
+    elseif player_total >= 17;
         disp('stand');
     elseif player_total >= 12 && player_total <=16
         disp('hit');
-    end
 end
        
 %current place: upper half of strategy is coded (12-17 player total, dealer
