@@ -21,10 +21,12 @@ for card_number = 1:52
     end
     card_value(card_number) = tmp_card_value;
 end
-player_hand = card_value(player_raw_hand) %turning the raw hand straight from the deck into values that have meaning in cards
-player_total = sum(card_value(player_raw_hand)) %totalling the two cards player has
+player_hand = card_value(player_raw_hand); %turning the raw hand straight from the deck into values that have meaning in cards
+player_total = sum(card_value(player_raw_hand)); %totalling the two cards player has
 dealer_hand = card_value(dealer_raw_hand); %turning raw hand from deck into cards with meaning
-dealer_first_card = card_value(dealer_hand(1)) %show only the first card of the dealer
+dealer_first_card = card_value(dealer_hand(1)); %show only the first card of the dealer
+
+% TESTING w/ Set Values
 dealer_first_card = 3
 player_total = 10
 
@@ -33,13 +35,13 @@ if dealer_first_card >= 2 && dealer_first_card <=6
         disp('stand')  
     elseif player_total >= 13 && player_total <=17
         disp('stand');
-    elseif player_total == 12 && dealer_first_card == 2 || dealer_first_card == 3
+    elseif player_total == 12 && (dealer_first_card == 2 || dealer_first_card == 3)
         disp('hit');
-    elseif player_total == 12 && dealer_first_card == 4 || dealer_first_card == 5 || dealer_first_card == 6
+    elseif player_total == 12 && (dealer_first_card == 4 || dealer_first_card == 5 || dealer_first_card == 6)
         disp('stand');
     end
 elseif dealer_first_card >= 7 && dealer_first_card <= 11
-    elseif player_total >= 17;
+    elseif player_total >= 17
         disp('stand');
     elseif player_total >= 12 && player_total <=16
         disp('hit');
@@ -65,7 +67,9 @@ elseif player_total == 9
     end
 elseif player_total == 8 
     disp('hit');
-end 
+end
+
+
 
 %current place: upper half of strategy is coded (12-17 player total, dealer
 %upcard 2-11)
