@@ -27,8 +27,8 @@ dealer_hand = card_value(dealer_raw_hand); %turning raw hand from deck into card
 dealer_first_card = card_value(dealer_hand(1)); %show only the first card of the dealer
 
 % TESTING w/ Set Values
-dealer_first_card = 3
-player_total = 10
+dealer_first_card = 6
+player_total = 8
 
 if dealer_first_card >= 2 && dealer_first_card <=6
     if player_total > 17 
