@@ -46,5 +46,5 @@ end
        
 %current place: upper half of strategy is coded (12-17 player total, dealer
 %upcard 2-11)
-%what's left in near future: player total above 17, player total below 11 --> coding the
-%strategy
+%what's left in near future: code next round of play + basic strategy below
+%12/11
