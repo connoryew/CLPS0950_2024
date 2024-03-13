@@ -72,7 +72,8 @@ end
 shuffle_card[card_value(player_raw_hand)] = []; %removing their drawn cards from the deck
 shuffle_card[card_value(dealer_raw_hand)] = [];
 %round two: player hits
-%if hit is sensed by computer/code
+%if hit is sensed by computer/code using the input operator; something like
+%hit = input(prompt)
 player_raw_hand2 = shuffle_card(1); % player draws next card
 player_hand2 = card_value(player_raw_hand2); %turning the raw hand straight from the deck into values that have meaning in cards
 player_total2 = card_value(player_raw_hand2) + player_total; %totalling the three cards
