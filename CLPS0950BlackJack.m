@@ -69,6 +69,20 @@ elseif player_total == 8
     disp('hit');
 end
 
+%hit condition psuedocode (writing out the logic first)
+
+%shuffle dechk needs to lose the four cards dealt out, so can use empty
+%brackets and convert from player hand --> player raw value --> shuffle
+%deck to lose those four values
+
+%if the hit is displayed
+%then shuffle deck needs to hand out one more straight to you face up
+%remember if you hit, you're ONLY seeing the dealer's top card
+
+%stand condition
+%if stand is displayed, then your player hand stays up and untouched and
+%then 
+
 
 
 %current place: upper half of strategy is coded (12-17 player total, dealer
