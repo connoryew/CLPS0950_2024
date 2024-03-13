@@ -1,14 +1,12 @@
 % CLPS0950 Group Project: Blackjack (w/ Basic Strategy Recommendations)
 % Group Members: Nicole Chen, Jilienne Widener, Connor Yew
 
-%blackjack
-%start with shuffle deck
-shuffle_card = randperm(52);
-% Initialize player and dealer hands
-player_raw_hand = shuffle_card(1:2:3); % dealer gives first and third card to player
-dealer_raw_hand = shuffle_card(2:2:4); % dealer takes second and fourth for themselves
-%card values
-card_value = zeros(1,52); %initialize our card values with 0
+% SETTING UP THE GAME
+
+shuffle_card = randperm(52); % "Shuffles" the deck by creating a 1x52 vector of random permutations of integers 1-52
+player_raw_hand = shuffle_card(1:2:3); % Deals the 1st and 3rd values from the vector shuffle_card to the player
+dealer_raw_hand = shuffle_card(2:2:4); % Deals the 2nd and 4th values from the vector shuffle card to the dealer
+card_value = zeros(1,52); % Initializes a 1x52 vector of zeroes for the values of the cards
 for card_number = 1:52
     posit_value = mod(card_number, 13); %posit or position value is the deck position, that we need to map to the game value
     if posit_value == 1 %because ace is 1, 1 mod 13 returns 1 --> its position in the modulo operation
@@ -68,6 +66,11 @@ elseif player_total == 9
 elseif player_total == 8 
     disp('hit');
 end
+
+%current place: upper half of strategy is coded (12-17 player total, dealer
+%upcard 2-11)
+%what's left in near future: code next round of play 
+
 
 %hit condition psuedocode (writing out the logic first)
 
