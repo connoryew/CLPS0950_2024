@@ -68,6 +68,52 @@ elseif player_total == 8
 end
 
 
+% HIT LOGIC:
+shuffle_card[card_value(player_raw_hand)] = []; %removing their drawn cards from the deck
+shuffle_card[card_value(dealer_raw_hand)] = [];
+%round two: player hits
+%if hit is sensed by computer/code
+player_raw_hand2 = shuffle_card(1); % player draws next card
+player_hand2 = card_value(player_raw_hand2); %turning the raw hand straight from the deck into values that have meaning in cards
+player_total2 = card_value(player_raw_hand2) + player_total; %totalling the three cards
+if dealer_first_card >= 2 && dealer_first_card <=6
+    if player_total2 > 17 
+        disp('stand')  
+    elseif player_total2 >= 13 && player_total2 <=17
+        disp('stand');
+    elseif player_total2 == 12 && (dealer_first_card == 2 || dealer_first_card == 3)
+        disp('hit');
+    elseif player_total2 == 12 && (dealer_first_card == 4 || dealer_first_card == 5 || dealer_first_card == 6)
+        disp('stand');
+    end
+elseif dealer_first_card >= 7 && dealer_first_card <= 11
+    elseif player_total2 >= 17
+        disp('stand');
+    elseif player_total2 >= 12 && player_total2 <=16
+        disp('hit');
+end
+if player_total2 == 11
+    if dealer_first_card >= 2 && dealer_first_card <= 10
+        disp('double');
+    elseif dealer_first_card == 1 
+        disp('double');
+    end 
+elseif player_total2 == 10 
+    if dealer_first_card == 10 || dealer_first_card == 1 
+        disp('hit');
+    elseif dealer_first_card >= 2 && dealer_first_card <= 9
+        disp('double');
+    end
+elseif player_total2 == 9 
+    if dealer_first_card >= 3 && dealer_first_card <= 6
+        disp('double');
+    else
+        disp('hit');
+    end
+elseif player_total2 == 8 
+    disp('hit');
+end
+
 
 %current place: upper half of strategy is coded (12-17 player total, dealer
 %upcard 2-11)
