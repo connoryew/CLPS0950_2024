@@ -25,6 +25,7 @@ dealer_first_card = card_value(dealer_hand(1)) %show only the first card of the 
 % Display initial hands and totals
 disp(['Your initial cards: ', num2str(player_hand)]);
 disp(['Your total: ', num2str(player_total)]);
+disp(['Dealer\'s showing card: ', num2str(dealer_first_card)']);
 
 % TESTING/DEBUGGING w/ Set Values
 %dealer_first_card = 6
