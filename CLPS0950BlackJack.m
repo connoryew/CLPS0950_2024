@@ -50,7 +50,6 @@ shuffle_card = shuffle_card(5:end); % Since the first four cards are already dea
 
 %round two
 %player's decision pathways
-
 while true
     user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
 
@@ -61,20 +60,20 @@ while true
         
         % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
         player_hand = card_value(player_raw_hand);
-        player_total2 = sum(player_hand);
+        player_total = sum(player_hand);
 
         % Checks if the player has busted with their new total
-        if player_total2 > 21
+        if player_total > 21
             disp('Bust! You lose :(');
             break; % Breaks out of the loop and ends the game if the player busts
         end
 
-        % Reruns the Hard Totals Basic Strategy w/ the new total
-        basic_strat_recommendation = basic_strategy(dealer_first_card,player_total2);
+        % Reruns the Hard Total Basic Strategy w/ the new total
+        basic_strat_recommendation = basic_strategy(dealer_first_card,player_total);
 
         % Displays post-hit player cards, new player total and gives a new basic strategy recommendation
         disp(['Your Current Cards: ', num2str(player_hand)]);
-        disp(['Your Total: ', num2str(player_total2)]);
+        disp(['Your Total: ', num2str(player_total)]);
         disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
         disp (['We recommend that you: ', num2str(basic_strat_recommendation)]);
 
@@ -84,19 +83,18 @@ while true
 
        % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
         player_hand = card_value(player_raw_hand);
-        player_total2 = sum(player_hand);
-        disp(player_total2);
+        player_total = sum(player_hand);
        
         % Checks if the player has busted with their new total
-        if player_total2 > 21
-            disp(player_total2);
+        if player_total > 21
+            disp(player_total);
             disp('Bust! You lose :(');
             break; % Breaks out of the loop and ends the game if the player busts
         end
 
         % Displays post-double player cards and new player total before breaking and heading to dealer showdown
         disp(['Your Current Cards: ', num2str(player_hand)]);
-        disp(['Your Total: ', num2str(player_total2)]);
+        disp(['Your Total: ', num2str(player_total)]);
         disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
         break;
 
@@ -109,12 +107,12 @@ while true
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DEALER CODE WILL GO HERE
+%DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
 
 dealer_second_card = card_value(dealer_hand(2)); %now creating dealer 2nd card variable 
 disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); %showing dealer 2nd card
 dealer_total = sum(card_value(dealer_raw_hand)); %now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
-disp(['Dealer Total: ', num2str(dealer_total)]); %displaying dealer total
+disp(['Dealer"s Total: ', num2str(dealer_total)]); %displaying dealer total
 
 %probably should make this into a four loop because imagine they keep
 %getting like 2s 
@@ -124,15 +122,31 @@ while dealer_total < 16
     shuffle_card(1) = []; %removing the next available card
     dealer_hand = card_value(dealer_raw_hand); %updating dealer hand
     dealer_total = sum(card_value(dealer_hand)); %summing their total with their 3rd (total after 1st hit for n hits)
+    if dealer_total > 21
+        disp(['Dealer''s Total: ', num2str(dealer_total)]);
+        disp('Dealer Busts. You win!');
+        break; % Breaks out of the loop and ends the game if the dealer busts
+    end
     disp(['Dealer''s Hand: ', num2str(dealer_hand)]); 
     disp(['Dealer''s Total: ', num2str(dealer_total)]); 
 end
 
-if dealer_total >= 17
-    disp('Dealer Stands!');
+if (dealer_total >= 17) && (dealer_total >= 21)
+    disp('Dealer Stands');
     return;
 end
 
+% Calculate the game outcome
+if player_total > dealer_total
+    outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '},num2str(dealer_total),'. You win!');
+    disp (outcome);
+elseif player_total < dealer_total
+    outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '}, num2str(dealer_total),'. You lose :(');
+    disp (outcome);
+elseif player_total == dealer_total
+    outcome = strcat('You have ', {' '}, num2str(player_total),', and the dealer has', {' '}, num2str(dealer_total),'. You push');
+    disp (outcome);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -181,6 +195,9 @@ elseif player_total == 8
     basic_strat_recommendation = 'HIT';
 end
 
+% Still need to code for hard totals < 8! I imagine it'll be all hits, but
+% I'll double check that and add it in. 
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,7 +206,9 @@ end
 
 % Double Down and Hit logic have been successfully coded for one round of
 % play. Basic strategy recommendations are being offered with each
-% additional card dealt to the player.
+% additional card dealt to the player. Just added code for the dealer
+% showdown, but we still have issues with things running after the game is
+% supposed to end
 
 % NEXT STEPS:
 
@@ -201,12 +220,9 @@ end
 %   2. Find a way to accomodate multiple hits. I have no idea what we're
 %   going to do about splits (both gameplay and card image-wise)...
 
-% Add the code for dealer showdown:
-%   1. Reveal dealer's face-down card, have the dealer continue to hit until
-%   their total > 16 and stand once they reach 17 or above
-%   2. Tally up the dealer's final total and compare how close it is to the
-%   player's total once they both stand
-%   3. Declare a winner!
+% Find a way to prevent Dealer Stands conditional from runnning after the
+% dealer busts, and find a way for the game to end after the player busts
+% (ie. the showdown conditionals don't run!)
 
 % Maybe find a way to use a loop to limit the amount of repetitive
 % copy-pasting needed for the hit logic and basic strategy calculations in
