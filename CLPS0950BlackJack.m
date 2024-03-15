@@ -109,6 +109,32 @@ while true
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DEALER CODE WILL GO HERE
+
+dealer_second_card = card_value(dealer_hand(2)); %now creating dealer 2nd card variable 
+disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); %showing dealer 2nd card
+dealer_total = sum(card_value(dealer_raw_hand)); %now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
+disp(['Dealer Total: ', num2str(dealer_total)]); %displaying dealer total
+
+%probably should make this into a four loop because imagine they keep
+%getting like 2s 
+while dealer_total < 16
+    disp('Dealer Hits!');
+    dealer_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
+    shuffle_card(1) = []; %removing the next available card
+    dealer_hand = card_value(dealer_raw_hand); %updating dealer hand
+    dealer_total = sum(card_value(dealer_hand)); %summing their total with their 3rd (total after 1st hit for n hits)
+    disp(['Dealer''s Hand: ', num2str(dealer_hand)]); 
+    disp(['Dealer''s Total: ', num2str(dealer_total)]); 
+end
+
+if dealer_total >= 17
+    disp('Dealer Stands!');
+    return;
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % HARD TOTALS BASIC STRATEGY FUNCTION:
 function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
