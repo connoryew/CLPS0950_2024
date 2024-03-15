@@ -33,7 +33,86 @@ dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/u
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% HARD TOTALS BASIC STRATEGY:
+% DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
+disp(['Your Initial Cards: ', num2str(player_hand)]);
+disp(['Your Total: ', num2str(player_total)]);
+disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
+basic_strat_recommendation = basic_strategy (dealer_first_card,player_total);
+disp (['We recommend that you: ', basic_strat_recommendation]);
+% We might want to eventually add some lines here that use imagesc and subplot to create a figure for the game table that we can update with each hit
+% We would also need to  upload the 52 images for the face of each possible card in the deck + an image of the back of a card for the dealer's down-card
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% HIT/STAND/DOUBLE LOGIC:
+
+shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
+
+%round two
+%player's decision pathways
+
+while true
+    user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
+
+    if user_input == 'h' % Player chooses to HIT
+
+        player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
+        shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
+        
+        % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
+        player_hand = card_value(player_raw_hand);
+        player_total2 = sum(player_hand);
+
+        % Checks if the player has busted with their new total
+        if player_total2 > 21
+            disp('Bust! You lose :(');
+            break; % Breaks out of the loop and ends the game if the player busts
+        end
+
+        % Reruns the Hard Totals Basic Strategy w/ the new total
+        basic_strat_recommendation = basic_strategy(dealer_first_card,player_total2);
+
+        % Displays post-hit player cards, new player total and gives a new basic strategy recommendation
+        disp(['Your Current Cards: ', num2str(player_hand)]);
+        disp(['Your Total: ', num2str(player_total2)]);
+        disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
+        disp (['We recommend that you: ', num2str(basic_strat_recommendation)]);
+
+    elseif user_input == 'd' % Player chooses to DOUBLE DOWN
+        player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
+        shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
+
+       % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
+        player_hand = card_value(player_raw_hand);
+        player_total2 = sum(player_hand);
+        disp(player_total2);
+       
+        % Checks if the player has busted with their new total
+        if player_total2 > 21
+            disp(player_total2);
+            disp('Bust! You lose :(');
+            break; % Breaks out of the loop and ends the game if the player busts
+        end
+
+        % Displays post-double player cards and new player total before breaking and heading to dealer showdown
+        disp(['Your Current Cards: ', num2str(player_hand)]);
+        disp(['Your Total: ', num2str(player_total2)]);
+        disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
+        break;
+
+    elseif user_input == 's' % Player chooses to STAND
+        break; % We break the loop and proceed with the dealer showdown code
+
+    else % Accounting for cases where people dont pick an ideal h/d/s key.
+        disp('Invalid input. Please choose "h" to HIT, "d" to DOUBLE, or "s" to STAND.');
+    end    
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% HARD TOTALS BASIC STRATEGY FUNCTION:
+function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
+
 basic_strat_recommendation = ' ';
 
 if dealer_first_card >= 2 && dealer_first_card <=6
@@ -76,117 +155,6 @@ elseif player_total == 8
     basic_strat_recommendation = 'HIT';
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
-disp(['Your Initial Cards: ', num2str(player_hand)]);
-disp(['Your Total: ', num2str(player_total)]);
-disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
-disp (['We recommend that you: ', basic_strat_recommendation]);
-% We might want to eventually add some lines here that use imagesc and subplot to create a figure for the game table that we can update with each hit
-% We would also need to  upload the 52 images for the face of each possible card in the deck + an image of the back of a card for the dealer's down-card
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% HIT/STAND/DOUBLE LOGIC:
-
-shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
-
-%round two
-%player's decision pathways
-
-while true
-    user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
-
-    if user_input == 'h' % Player chooses to HIT
-
-        player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
-        shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
-        
-        % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
-        player_hand = card_value(player_raw_hand);
-        player_total2 = sum(player_hand);
-
-        % Checks if the player has busted with their new total
-        if player_total2 > 21
-            disp('Bust! You lose :(');
-            break; % Breaks out of the loop and ends the game if the player busts
-        end
-
-        % Reruns the Hard Totals Basic Strategy w/ the new total
-        if dealer_first_card >= 2 && dealer_first_card <=6
-            if player_total2 > 17
-                basic_strat_recommendation = 'STAND';
-            elseif player_total2 >= 13 && player_total2 <=17
-                basic_strat_recommendation = 'STAND';
-            elseif player_total2 == 12 && (dealer_first_card == 2 || dealer_first_card == 3)
-                basic_strat_recommendation = 'HIT';
-            elseif player_total2 == 12 && (dealer_first_card == 4 || dealer_first_card == 5 || dealer_first_card == 6)
-                basic_strat_recommendation = 'STAND';
-            end
-        elseif dealer_first_card >= 7 && dealer_first_card <= 11
-            if player_total2 >= 17
-                basic_strat_recommendation = 'STAND';
-            elseif player_total2 >= 12 && player_total2 <=16
-                basic_strat_recommendation = 'HIT';
-            end
-        end
-
-        if player_total2 == 11
-            if dealer_first_card >= 2 && dealer_first_card <= 10
-                basic_strat_recommendation = 'DOUBLE';
-            elseif dealer_first_card == 1
-                basic_strat_recommendation = 'DOUBLE';
-            end
-        elseif player_total2 == 10
-            if dealer_first_card == 10 || dealer_first_card == 1
-                basic_strat_recommendation = 'HIT';
-            elseif dealer_first_card >= 2 && dealer_first_card <= 9
-                basic_strat_recommendation = 'DOUBLE';
-            end
-        elseif player_total2 == 9
-            if dealer_first_card >= 3 && dealer_first_card <= 6
-                basic_strat_recommendation = 'DOUBLE';
-            else
-                basic_strat_recommendation = 'HIT';
-            end
-        elseif player_total2 == 8
-            basic_strat_recommendation = 'HIT';
-        end
-
-        % Displays post-hit player cards, new player total and gives a new basic strategy recommendation
-        disp(['Your Current Cards: ', num2str(player_hand)]);
-        disp(['Your Total: ', num2str(player_total2)]);
-        disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
-        disp (['We recommend that you: ', num2str(basic_strat_recommendation)]);
-
-    elseif user_input == 'd' % Player chooses to DOUBLE DOWN
-        player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
-        shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
-
-       % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
-        player_hand = card_value(player_raw_hand);
-        player_total2 = sum(player_hand);
-        disp(player_total2);
-       
-        % Checks if the player has busted with their new total
-        if player_total2 > 21
-            disp('Bust! You lose :(');
-            break; % Breaks out of the loop and ends the game if the player busts
-        end
-
-        % Displays post-double player cards and new player total before breaking and heading to dealer showdown
-        disp(['Your Current Cards: ', num2str(player_hand)]);
-        disp(['Your Total: ', num2str(player_total2)]);
-        disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
-        break;
-
-    elseif user_input == 's' % Player chooses to STAND
-        break; % We break the loop and proceed with the dealer showdown code
-
-    else % Accounting for cases where people dont pick an ideal h/d/s key.
-        disp('Invalid input. Please choose "h" to HIT, "d" to DOUBLE, or "s" to STAND.');
-    end    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

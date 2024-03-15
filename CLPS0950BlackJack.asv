@@ -34,6 +34,8 @@ dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % HARD TOTALS BASIC STRATEGY:
+function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
+
 basic_strat_recommendation = ' ';
 
 if dealer_first_card >= 2 && dealer_first_card <=6
@@ -76,6 +78,7 @@ elseif player_total == 8
     basic_strat_recommendation = 'HIT';
 end
 
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
@@ -191,12 +194,13 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Current Place: 
+% CURRENT PLACE: 
+
 % Double Down and Hit logic have been successfully coded for one round of
 % play. Basic strategy recommendations are being offered with each
 % additional card dealt to the player.
 
-% Next Steps:
+% NEXT STEPS:
 
 % Code in the card images and have them display during the DISPLAY INITIAL
 % GAME VALUES and after each hit:
@@ -214,4 +218,5 @@ end
 %   3. Declare a winner!
 
 % Maybe find a way to use a loop to limit the amount of repetitive
-% copy-pasting for the hit logic and basic strategy c
+% copy-pasting needed for the hit logic and basic strategy calculations in
+% subsequent rounds?
