@@ -1,7 +1,6 @@
 % CLPS0950 Group Project: Blackjack (w/ Basic Strategy Recommendations)
 % Group Members: Nicole Chen, Jilienne Widener, Connor Yew
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % SETTING UP THE GAME
 shuffle_card = randperm(52); % "Shuffles" the deck by creating a 1x52 vector of random permutations of integers 1-52
 player_raw_hand = shuffle_card(1:2:3); % Deals the 1st and 3rd values from the vector shuffle_card to the player
@@ -21,8 +20,9 @@ for card_number = 1:52
 end
 
 player_hand = card_value(player_raw_hand); % Finds the values of the two cards that were dealt to the player in player_raw_hand
-player_total = sum(card_value(player_raw_hand)); % Totals the values of the two cards to calculate an initial player total
+[player_total, player_hand] = adjust_aces(player_raw_hand,card_value);
 dealer_hand = card_value(dealer_raw_hand); % Finds the values of the dealer's hand
+[dealer_total, dealer_hand] = adjust_aces(dealer_raw_hand,card_value);
 dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/up card of the dealer's hand
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,24 +32,30 @@ dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/u
 % player_total = [ ];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
 disp(['Your Initial Cards: ', num2str(player_hand)]);
 disp(['Your Total: ', num2str(player_total)]);
 disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
-basic_strat_recommendation = basic_strategy (dealer_first_card,player_total);
+
+% Check if the player's initial hand is soft or hard and call the appropriate strategy function
+is_soft_hand = any(player_hand == 11) && player_total <= 21; 
+if is_soft_hand
+    % Call the soft hand strategy function 
+    basic_strat_recommendation = soft_basic_strategy (dealer_first_card,player_total);
+else
+    % Call the hard hand strategy function
+    basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
+end 
 disp (['We recommend that you: ', basic_strat_recommendation]);
 % We might want to eventually add some lines here that use imagesc and subplot to create a figure for the game table that we can update with each hit
 % We would also need to  upload the 52 images for the face of each possible card in the deck + an image of the back of a card for the dealer's down-card
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % HIT/STAND/DOUBLE LOGIC:
-
 shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
 
-%round two
-%player's decision pathways
+% Round two
+% Player's decision pathways
 while true
     user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
 
@@ -58,9 +64,18 @@ while true
         player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
         shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
         
-        % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
-        player_hand = card_value(player_raw_hand);
-        player_total = sum(player_hand);
+        % Adjust aces in player's hand if necessary 
+        [player_total, player_hand] = adjust_aces(player_raw_hand,card_value);
+
+        % Check if the player's hand is soft or hard after the hit
+        is_soft_hand = any(player_hand == 11) && player_total <= 21;
+        if is_soft_hand
+            % Call the soft hand strategy function
+            basic_strat_recommendation = soft_basic_strategy(dealer_first_card, player_total);
+        else
+            % Call the hard hand strategy function
+            basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
+        end
 
         % Checks if the player has busted with their new total
         if player_total > 21
@@ -82,11 +97,20 @@ while true
         player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
         shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
 
-       % Uses similar logic from the game setup portion to update the values of player_hand and recalculate player_total
-        player_hand = card_value(player_raw_hand);
-        player_total = sum(player_hand);
+       % Adjust aces in player's hand if necessary 
+       [player_total, player_hand] = adjust_aces(player_raw_hand,card_value); 
+
+       % Check if the player's hand is soft or hard after doubling
+        is_soft_hand = any(player_hand == 11) && player_total <= 21;
+        if is_soft_hand
+            % Call the soft hand strategy function
+            basic_strat_recommendation = soft_basic_strategy(dealer_first_card, player_total);
+        else
+            % Call the hard hand strategy function
+            basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
+        end
        
-        % Checks if the player has busted with their new total
+       % Checks if the player has busted with their new total
         if player_total > 21
             disp(player_total);
             disp('Bust! You lose :(');
@@ -109,12 +133,11 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
-
 if (player_total <= 21) && (dealer_total <= 21)
-    dealer_second_card = card_value(dealer_hand(2)); %now creating dealer 2nd card variable
-    disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); %showing dealer 2nd card
-    dealer_total = sum(card_value(dealer_raw_hand)); %now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
-    disp(['Dealer"s Total: ', num2str(dealer_total)]); %displaying dealer total
+    dealer_second_card = card_value(dealer_hand(2)); % Now creating dealer 2nd card variable
+    disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); % Showing dealer 2nd card
+    dealer_total = sum(card_value(dealer_raw_hand)); % Now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
+    disp(['Dealer"s Total: ', num2str(dealer_total)]); % Displaying dealer total
 end
 %probably should make this into a four loop because imagine they keep
 %getting like 2s 
@@ -123,9 +146,10 @@ if (player_total <= 21) && (dealer_total <= 21)
     while dealer_total <= 16
         disp('Dealer Hits!');
         dealer_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
-        shuffle_card(1) = []; %removing the next available card
-        dealer_hand = card_value(dealer_raw_hand); %updating dealer hand
-        dealer_total = sum(card_value(dealer_hand)); %summing their total with their 3rd (total after 1st hit for n hits)
+        shuffle_card(1) = []; % Removing the next available card
+        % Adjust aces in dealer's hand if necessary 
+        [dealer_total,dealer_hand] = adjust_aces(dealer_raw_hand,card_value); 
+
         if dealer_total > 21
             disp(['Dealer''s Total: ', num2str(dealer_total)]);
             disp('Dealer Busts. You win!');
@@ -157,7 +181,6 @@ if (player_total <= 21) && (dealer_total <= 21)
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % HARD TOTALS BASIC STRATEGY FUNCTION:
 function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
 
@@ -210,16 +233,77 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SOFT TOTALS BASIC STRATEGY FUNCTION:
+function [soft_strat_recommendation] = soft_basic_strategy(dealer_first_card,player_soft_total)
+    soft_strat_recommendation = '';
+    if (player_soft_total == 20)
+        soft_strat_recommendation = 'STAND'; 
+    elseif (player_soft_total == 19)
+        if (dealer_first_card == 6)
+            soft_strat_recommendation = 'DOUBLE'; 
+        else 
+            soft_strat_recommendation = 'STAND';
+        end 
 
-%need to consider whether an Ace will be a 1 or an 11- see basic strategy
-%to know what to recommend; will need to manipulate player total and change
-%the value of the ace based on whether player total will get us closer to
-%21 without bust
+    elseif (player_soft_total == 18)
+        if (dealer_first_card >= 9)
+            soft_strat_recommendation = 'HIT';
+        elseif (dealer_first_card == 2 || dealer_upcard == 7 || dealer_upcard == 8)
+            soft_strat_recommendation = 'STAND';
+        else
+            soft_strat_recommendation = 'DOUBLE';
+        end
+    elseif (player_soft_total == 17)  
+        if (dealer_first_card >= 3 && dealer_upcard <= 6)
+            soft_strat_recommendation = 'DOUBLE';
+        else
+            soft_strat_recommendation = 'HIT';
+        end
+        
+    elseif (player_soft_total == 16)  
+        if (dealer_first_card >= 4 && dealer_upcard <= 6)
+            soft_strat_recommendation = 'DOUBLE';
+        else
+            soft_strat_recommendation = 'HIT';
+        end
+        
+    elseif (player_soft_total == 15) 
+        if (dealer_first_card >= 4 && dealer_upcard <= 6)
+            soft_strat_recommendation = 'DOUBLE';
+        else
+            soft_strat_recommendation = 'HIT';
+        end
+        
+    elseif (player_soft_total == 14)  
+        if (dealer_first_card >= 5 && dealer_upcard <= 6)
+            soft_strat_recommendation = 'DOUBLE';
+        else
+            soft_strat_recommendation = 'HIT';
+        end
+        
+    elseif (player_soft_total == 13)  
+        if (dealer_first_card >= 5 && dealer_upcard <= 6)
+            soft_strat_recommendation = 'DOUBLE';
+        else
+            soft_strat_recommendation = 'HIT';
+        end
+        
+    end
 
-
-
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACES:
+function [adjusted_total, adjusted_hand] = adjust_aces(hand,card_values)
+    adjusted_hand = card_values(hand);
+    adjusted_total = sum(adjusted_hand);
 
+    aces_as_eleven = find (adjusted_hand == 11);
+    while adjusted_total > 21 && ~isempty(aces_as_eleven)
+        adjusted_hand(aces_as_eleven(1)) = 1; 
+        adjusted_total = sum(adjusted_hand); 
+        aces_as_eleven = find(adjusted_hand == 11); 
+    end 
+end 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % CURRENT PLACE: 
 
