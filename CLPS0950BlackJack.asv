@@ -64,7 +64,6 @@ while true
 
         % Checks if the player has busted with their new total
         if player_total > 21
-            disp(player_total);
             disp('Bust! You lose :(');
             break; % Breaks out of the loop and ends the game if the player busts
         end
@@ -110,50 +109,43 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
 
-if (player_total <= 21) && (dealer_total <= 21)
-    dealer_second_card = card_value(dealer_hand(2)); %now creating dealer 2nd card variable
-    disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); %showing dealer 2nd card
-    dealer_total = sum(card_value(dealer_raw_hand)); %now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
-    disp(['Dealer"s Total: ', num2str(dealer_total)]); %displaying dealer total
-end
+dealer_second_card = card_value(dealer_hand(2)); %now creating dealer 2nd card variable 
+disp(['Dealer''s Down-Card: ', num2str(dealer_second_card)]); %showing dealer 2nd card
+dealer_total = sum(card_value(dealer_raw_hand)); %now calculating dealer total (remember, this is all code for their first two cards because dealer hasn't done anything since)
+disp(['Dealer"s Total: ', num2str(dealer_total)]); %displaying dealer total
+
 %probably should make this into a four loop because imagine they keep
 %getting like 2s 
-
-if (player_total <= 21) && (dealer_total <= 21)
-    while dealer_total <= 16
-        disp('Dealer Hits!');
-        dealer_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
-        shuffle_card(1) = []; %removing the next available card
-        dealer_hand = card_value(dealer_raw_hand); %updating dealer hand
-        dealer_total = sum(card_value(dealer_hand)); %summing their total with their 3rd (total after 1st hit for n hits)
-        if dealer_total > 21
-            disp(['Dealer''s Total: ', num2str(dealer_total)]);
-            disp('Dealer Busts. You win!');
-            break; % Breaks out of the loop and ends the game if the dealer busts
-        end
-        disp(['Dealer''s Hand: ', num2str(dealer_hand)]);
+while dealer_total < 16
+    disp('Dealer Hits!');
+    dealer_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
+    shuffle_card(1) = []; %removing the next available card
+    dealer_hand = card_value(dealer_raw_hand); %updating dealer hand
+    dealer_total = sum(card_value(dealer_hand)); %summing their total with their 3rd (total after 1st hit for n hits)
+    if dealer_total > 21
         disp(['Dealer''s Total: ', num2str(dealer_total)]);
+        disp('Dealer Busts. You win!');
+        break; % Breaks out of the loop and ends the game if the dealer busts
     end
+    disp(['Dealer''s Hand: ', num2str(dealer_hand)]); 
+    disp(['Dealer''s Total: ', num2str(dealer_total)]); 
+end
 
-    if (player_total <= 21) && (dealer_total <= 21)
-        if (dealer_total >= 17) && (dealer_total <= 21)
-            disp('Dealer Stands');
-        end
-    end
+if (dealer_total >= 17) && (dealer_total <= 21)
+    disp('Dealer Stands');
 end
 
 % Calculate the game outcome
 if (player_total <= 21) && (dealer_total <= 21)
-    if (player_total > dealer_total)
-        outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '},num2str(dealer_total),'. You win!');
-        disp (outcome);
-    elseif player_total < dealer_total
-        outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '}, num2str(dealer_total),'. You lose :(');
-        disp (outcome);
-    elseif player_total == dealer_total
-        outcome = strcat('You have ', {' '}, num2str(player_total),', and the dealer has', {' '}, num2str(dealer_total),'. You push');
-        disp (outcome);
-    end
+if (player_total > dealer_total) && 
+    outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '},num2str(dealer_total),'. You win!');
+    disp (outcome);
+elseif player_total < dealer_total
+    outcome = strcat('You have', {' '}, num2str(player_total),', and the dealer has ', {' '}, num2str(dealer_total),'. You lose :(');
+    disp (outcome);
+elseif player_total == dealer_total
+    outcome = strcat('You have ', {' '}, num2str(player_total),', and the dealer has', {' '}, num2str(dealer_total),'. You push');
+    disp (outcome);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
