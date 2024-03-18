@@ -199,7 +199,7 @@ elseif player_total == 9
     else
         basic_strat_recommendation = 'HIT';
     end
-elseif player_total == 8 
+elseif player_total <= 8 
     basic_strat_recommendation = 'HIT';
 end
 
@@ -209,6 +209,17 @@ end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SOFT TOTALS BASIC STRATEGY FUNCTION:
+
+%need to consider whether an Ace will be a 1 or an 11- see basic strategy
+%to know what to recommend; will need to manipulate player total and change
+%the value of the ace based on whether player total will get us closer to
+%21 without bust
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 % CURRENT PLACE: 
 
