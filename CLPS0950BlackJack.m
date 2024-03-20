@@ -28,9 +28,9 @@ dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % TESTING/DEBUGGING w/ Set Initial Values
- %dealer_first_card = [10];
+ %dealer_first_card = [];
  %player_total = [];
- %player_hand = [11];
+ %player_hand = [];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
@@ -42,7 +42,7 @@ disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
 is_soft_hand = any(player_hand == 11) && player_total <= 21; 
 if is_soft_hand
     % Call the soft hand strategy function 
-    basic_strat_recommendation = soft_basic_strategy (dealer_first_card,player_total);
+    basic_strat_recommendation = soft_basic_strategy(dealer_first_card,player_total);
 else
     % Call the hard hand strategy function
     basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
