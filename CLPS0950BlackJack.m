@@ -38,8 +38,8 @@ disp(['Your Total: ', num2str(player_total)]);
 disp(['Dealer''s Up-Card: ', dealer_first_card_display]);
 
 %initialize
-black_jack = [];
-proceed_to_dealer = [];
+black_jack = false;
+proceed_to_dealer = false;
 
 %At the start of the player's turn, check for Blackjack
 if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
@@ -47,7 +47,7 @@ if player_total == 21 && numel(player_hand) == 2 %if their first two cards = bla
     proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
     disp('Blackjack! Player wins!');
 else
-    proceed_to_dealer = false;  % Continue with the player's turn normally
+    proceed_to_dealer = false;  %continue with the player's turn normally
 end
 % Check if the player's initial hand is soft or hard and call the appropriate strategy function
 is_soft_hand = any(player_hand == 11) && player_total <= 21; 
@@ -68,27 +68,25 @@ shuffle_card = shuffle_card(5:end); % Since the first four cards are already dea
 %Player's decision pathways
 
 if ~proceed_to_dealer & ~black_jack
-    user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
+    while true
+        user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
         if (user_input == 'h') || (user_input == 'd') % Player chooses to HIT or DOUBLE DOWN
-        % Draw a card (applicable to both HIT and DOUBLE DOWN)
-        next_card_index = shuffle_card(1);
-        player_raw_hand(end+1) = next_card_index; % Add the card to the player's raw hand
-        player_display_hand{end+1} = card_display_value{next_card_index}; % Add the card to the player's display hand
-        shuffle_card(1) = []; % Remove the drawn card from the deck
-        % Adjust aces in player's hand if necessary and update total
-        [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand, card_value, player_display_hand);
-        % Display updated player cards and total using display values
-        disp(['Your Current Cards: ', strjoin(player_display_hand, ', ')]);
-        disp(['Your Total: ', num2str(player_total)]);
-        % After HIT, check for player's action continuation or bust
-        if user_input == 'h'
-            % Check if the player has busted with their new total
-            if player_total > 21
-                disp('Bust! You lose :(');
-                proceed_to_dealer = true;  % End the player's turn
-            else
-                % Display strategy recommendation based on updated total
-                is_soft_hand = any(player_hand == 11) && player_total <= 21;
+            % Draw a card (applicable to both HIT and DOUBLE DOWN)
+            next_card_index = shuffle_card(1);
+            player_raw_hand(end+1) = next_card_index; % Add the card to the player's raw hand
+            player_display_hand{end+1} = card_display_value{next_card_index}; % Add the card to the player's display hand
+            shuffle_card(1) = []; % Remove the drawn card from the deck
+            % Adjust aces in player's hand if necessary and update total
+            [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand, card_value, player_display_hand);
+            % Display updated player cards and total using display values
+            disp(['Your Current Cards: ', strjoin(player_display_hand, ', ')]);
+            disp(['Your Total: ', num2str(player_total)]);
+            % After HIT, check for player's action continuation or bust
+            if user_input == 'd' || player_total >=21
+                % Check if the player has busted with their new total
+                break;
+            end
+        elseif is_soft_hand == any(player_hand == 11) && player_total <= 21;% Display strategy recommendation based on updated total
                 if is_soft_hand
                     % Call the soft hand strategy function
                     basic_strat_recommendation = soft_basic_strategy(dealer_first_card, player_total);
@@ -97,22 +95,20 @@ if ~proceed_to_dealer & ~black_jack
                     basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
                 end
                 disp(['Strategy Recommendation: ', basic_strat_recommendation]);
-            end
-        elseif user_input == 'd' % Player chooses to DOUBLE DOWN
-            % Double down logic already covered above. If player_total > 21, it's handled.
-            proceed_to_dealer = true; % Whether bust or not, player's turn ends after double down.
+        elseif user_input == 's' % Player chooses to STAND
+            break; % Proceed to dealer's turn
+        else % Invalid input handling
+            disp('Invalid input. Please choose "h" to HIT, "d" to DOUBLE, or "s" to STAND.');
         end
-    elseif user_input == 's' % Player chooses to STAND
-        proceed_to_dealer = true; % Proceed to dealer's turn
-    else % Invalid input handling
-        disp('Invalid input. Please choose "h" to HIT, "d" to DOUBLE, or "s" to STAND.');
     end
+    proceed_to_dealer = true; %all break cases leave the while loop, come here instead
 end
-     % Show current state if game continues with the player
-     if ~proceed_to_dealer
-        disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
-        disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
-     end
+
+% Show current state if game continues with the player
+if ~proceed_to_dealer
+    disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
+    disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
 if player_total <= 21 & ~black_jack
