@@ -166,7 +166,7 @@ if (player_total <= 21)
     % Calculate the game outcome
     if player_total > dealer_total
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You win!']);
-    elseif player_total < dealer_total
+    elseif player_total < dealer_total && dealer_total <= 21
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You lose :(']);
     else % player_total == dealer_total
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
