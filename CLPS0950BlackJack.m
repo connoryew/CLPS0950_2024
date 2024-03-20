@@ -26,12 +26,14 @@ end
 player_display_hand = card_display_value(player_raw_hand); 
 dealer_display_hand = card_display_value(dealer_raw_hand); 
 
+
 % Adjust for aces and update display hands for player and dealer 
 [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand, card_value, player_display_hand);
 [dealer_total, dealer_hand, dealer_display_hand] = adjust_aces(dealer_raw_hand, card_value, dealer_display_hand);
 
 % Correctly set the dealer's first card for display
 dealer_first_card_display = dealer_display_hand{1};  % Use the display value directly
+dealer_first_card = card_value(dealer_raw_hand(1));  % Get the numerical value of the dealer's up-card
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
