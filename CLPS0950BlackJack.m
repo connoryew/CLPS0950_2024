@@ -153,6 +153,7 @@ if black_jack
         disp(['You have Blackjack ', num2str(player_total), ', and the dealer has Blackjack ', num2str(dealer_total), '. It''s a push.']);
     end
 end
+end 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HARD TOTALS BASIC STRATEGY FUNCTION:
 function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
