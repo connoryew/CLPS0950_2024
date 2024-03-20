@@ -48,6 +48,14 @@ disp(['Your Initial Cards: ', strjoin(player_display_hand, ', ')]);
 disp(['Your Total: ', num2str(player_total)]);
 disp(['Dealer''s Up-Card: ', dealer_first_card_display]);
 
+% At the start of the player's turn, check for Blackjack
+if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
+    disp('Blackjack! Player wins!');
+    proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
+else
+    proceed_to_dealer = false;  % Continue with the player's turn normally
+end
+
 % Check if the player's initial hand is soft or hard and call the appropriate strategy function
 is_soft_hand = any(player_hand == 11) && player_total <= 21; 
 if is_soft_hand
@@ -65,17 +73,9 @@ disp (['We recommend that you: ', basic_strat_recommendation]);
 % HIT/STAND/DOUBLE LOGIC:
 shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
 
-% At the start of the player's turn, check for Blackjack
-if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
-    disp('Blackjack! Player wins!');
-    proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
-else
-    proceed_to_dealer = false;  % Continue with the player's turn normally
-end
-
 % Round two
 % Player's decision pathways
-while~proceed_to_dealer
+while ~proceed_to_dealer
     user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
         if user_input == 'h' || user_input == 'd' % Player chooses to HIT or DOUBLE DOWN
         % Draw a card (applicable to both HIT and DOUBLE DOWN)
