@@ -112,8 +112,7 @@ end
         disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
         disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
      end
-if proceed_to_dealer % start giant proceed to dealer loop
-end 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
 if (player_total <= 21) && ~black_jack
