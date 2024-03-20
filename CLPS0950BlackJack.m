@@ -259,7 +259,7 @@ function [soft_strat_recommendation] = soft_basic_strategy(dealer_first_card,pla
     end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ACES:
+% ACES
 function [adjusted_total, adjusted_hand, adjusted_display_hand] = adjust_aces(hand,card_values,display_hand)
     adjusted_hand = card_values(hand); % Converts raw hand to its value
     adjusted_display_hand = display_hand; % Initially, just pass through
