@@ -216,6 +216,8 @@ elseif player_total == 9
     end
 elseif player_total <= 8 
     basic_strat_recommendation = 'HIT';
+elseif player_total == 21 
+    basic_strat_recommendation = 'STAND';
 end
 
 % Still need to code for hard totals < 8! I imagine it'll be all hits, but
