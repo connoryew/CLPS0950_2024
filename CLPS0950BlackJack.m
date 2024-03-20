@@ -50,6 +50,7 @@ disp(['Dealer''s Up-Card: ', dealer_first_card_display]);
 
 % At the start of the player's turn, check for Blackjack
 if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
+    black_jack = true;
     disp('Blackjack! Player wins!');
     proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
 else
@@ -75,9 +76,9 @@ shuffle_card = shuffle_card(5:end); % Since the first four cards are already dea
 
 % Round two
 % Player's decision pathways
-while ~proceed_to_dealer
+while (~proceed_to_dealer) && ~black_jack
     user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
-        if user_input == 'h' || user_input == 'd' % Player chooses to HIT or DOUBLE DOWN
+        if (user_input == 'h') || (user_input == 'd') % Player chooses to HIT or DOUBLE DOWN
         % Draw a card (applicable to both HIT and DOUBLE DOWN)
         next_card_index = shuffle_card(1);
         player_raw_hand(end+1) = next_card_index; % Add the card to the player's raw hand
@@ -126,8 +127,8 @@ end
 
      % Show current state if game continues with the player
      if ~proceed_to_dealer
-     disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
-     disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
+        disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
+        disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
      end
 
 
@@ -135,7 +136,7 @@ if proceed_to_dealer % start giant proceed to dealer loop
 end 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
-if (player_total <= 21)
+if (player_total <= 21) && ~black_jack
     disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]); % Show dealer's second card using display hand
     % Recalculate dealer's total considering the possibility of Ace adjustments not yet applied
     [dealer_total, dealer_hand, dealer_display_hand] = adjust_aces(dealer_raw_hand, card_value, dealer_display_hand);
@@ -168,8 +169,14 @@ if (player_total <= 21)
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You win!']);
     elseif player_total < dealer_total && dealer_total <= 21
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You lose :(']);
-    else % player_total == dealer_total
+    else player_total = dealer_total
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
+    end
+
+if black_jack
+    disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]);
+    if dealer_total == 21 && numel(player_hand) == 2
+        disp(['You have Blackjack ', num2str(player_total), ', and the dealer has Blackjack ', num2str(dealer_total), '. It''s a push.']);
     end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
