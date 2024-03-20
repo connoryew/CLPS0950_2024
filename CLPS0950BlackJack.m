@@ -168,7 +168,7 @@ if (player_total <= 21)
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You win!']);
     elseif player_total < dealer_total && dealer_total <= 21
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You lose :(']);
-    else str2num(player_total) == str2num(dealer_total);
+    else (21 - player_total) == (21 - dealer_total); 
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
     end
 end
