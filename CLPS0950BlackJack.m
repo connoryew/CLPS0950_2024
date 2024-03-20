@@ -77,7 +77,7 @@ shuffle_card = shuffle_card(5:end); % Since the first four cards are already dea
 % Player's decision pathways
 while ~proceed_to_dealer
     user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
-        if user_input == 'h' || user_input == 'd' % Player chooses to HIT or DOUBLE DOWN
+        if (user_input == 'h') || (user_input == 'd') % Player chooses to HIT or DOUBLE DOWN
         % Draw a card (applicable to both HIT and DOUBLE DOWN)
         next_card_index = shuffle_card(1);
         player_raw_hand(end+1) = next_card_index; % Add the card to the player's raw hand
@@ -168,7 +168,7 @@ if (player_total <= 21)
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You win!']);
     elseif player_total < dealer_total && dealer_total <= 21
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You lose :(']);
-    else % player_total == dealer_total
+    else str2num(player_total) == str2num(dealer_total);
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
     end
 end
