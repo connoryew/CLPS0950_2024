@@ -28,8 +28,9 @@ dealer_first_card = card_value(dealer_hand(1)); % Finds the value of the first/u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % TESTING/DEBUGGING w/ Set Initial Values
-% dealer_first_card = [ ];
-% player_total = [ ];
+ %dealer_first_card = [10];
+ %player_total = [];
+ %player_hand = [11];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
@@ -247,41 +248,41 @@ function [soft_strat_recommendation] = soft_basic_strategy(dealer_first_card,pla
     elseif (player_soft_total == 18)
         if (dealer_first_card >= 9)
             soft_strat_recommendation = 'HIT';
-        elseif (dealer_first_card == 2 || dealer_upcard == 7 || dealer_upcard == 8)
+        elseif (dealer_first_card == 2 || dealer_first_card == 7 || dealer_first_card == 8)
             soft_strat_recommendation = 'STAND';
         else
             soft_strat_recommendation = 'DOUBLE';
         end
     elseif (player_soft_total == 17)  
-        if (dealer_first_card >= 3 && dealer_upcard <= 6)
+        if (dealer_first_card >= 3 && dealer_first_card <= 6)
             soft_strat_recommendation = 'DOUBLE';
         else
             soft_strat_recommendation = 'HIT';
         end
         
     elseif (player_soft_total == 16)  
-        if (dealer_first_card >= 4 && dealer_upcard <= 6)
+        if (dealer_first_card >= 4 && dealer_first_card <= 6)
             soft_strat_recommendation = 'DOUBLE';
         else
             soft_strat_recommendation = 'HIT';
         end
         
     elseif (player_soft_total == 15) 
-        if (dealer_first_card >= 4 && dealer_upcard <= 6)
+        if (dealer_first_card >= 4 && dealer_first_card <= 6)
             soft_strat_recommendation = 'DOUBLE';
         else
             soft_strat_recommendation = 'HIT';
         end
         
     elseif (player_soft_total == 14)  
-        if (dealer_first_card >= 5 && dealer_upcard <= 6)
+        if (dealer_first_card >= 5 && dealer_first_card <= 6)
             soft_strat_recommendation = 'DOUBLE';
         else
             soft_strat_recommendation = 'HIT';
         end
         
     elseif (player_soft_total == 13)  
-        if (dealer_first_card >= 5 && dealer_upcard <= 6)
+        if (dealer_first_card >= 5 && dealer_first_card <= 6)
             soft_strat_recommendation = 'DOUBLE';
         else
             soft_strat_recommendation = 'HIT';
