@@ -62,8 +62,11 @@ if is_soft_hand
 else
     % Call the hard hand strategy function
     basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
-end 
+end
+
+if ~proceed_to_dealer
 disp (['We recommend that you: ', basic_strat_recommendation]);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HIT/STAND/DOUBLE LOGIC:
@@ -91,9 +94,11 @@ if ~proceed_to_dealer & ~black_jack
                 basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
             end
 
+            disp(['Your Current Cards: ', num2str(player_hand)]);
+            disp(['Your Total: ', num2str(player_total)]);
+
             % Checks if the player has busted with their new total
             if player_total > 21
-                disp(player_total);
                 disp('Bust! You lose :(');
                 break; % Breaks out of the loop and ends the game if the player busts
             end
@@ -102,8 +107,6 @@ if ~proceed_to_dealer & ~black_jack
             basic_strat_recommendation = basic_strategy(dealer_first_card,player_total);
 
             % Displays post-hit player cards, new player total and gives a new basic strategy recommendation
-            disp(['Your Current Cards: ', num2str(player_hand)]);
-            disp(['Your Total: ', num2str(player_total)]);
             disp (['Dealer''s Up-Card: ', num2str(dealer_first_card)]);
             disp (['We recommend that you: ', num2str(basic_strat_recommendation)]);
 
@@ -126,7 +129,8 @@ if ~proceed_to_dealer & ~black_jack
 
             % Checks if the player has busted with their new total
             if player_total > 21
-                disp(player_total);
+                disp(['Your Current Cards: ', num2str(player_hand)]);
+                disp(['Your Total: ', num2str(player_total)]);
                 disp('Bust! You lose :(');
                 break; % Breaks out of the loop and ends the game if the player busts
             end
