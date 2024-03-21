@@ -47,7 +47,6 @@ proceed_to_dealer = false;
 
 %At the start of the player's turn, check for Blackjack
 if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
-    disp('Blackjack! Player wins!');
     black_jack = true;
     proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
 else
@@ -189,15 +188,16 @@ if player_total <= 21 & ~black_jack
     elseif (player_total == dealer_total)
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
     end
-
-    if black_jack
-        disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]);
-        if dealer_total == 21 && numel(player_hand) == 2
-            disp(['You have Blackjack ', num2str(player_total), ', and the dealer has Blackjack ', num2str(dealer_total), '. It''s a push.']);
-        end
-    end
 end
 
+if black_jack
+    disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]);
+    if dealer_total == 21 && numel(player_hand) == 2
+        disp(['You have Blackjack ', num2str(player_total), ', and the dealer has Blackjack ', num2str(dealer_total), '. It''s a push.']);
+    else
+        disp(['Blackjack! You win 1.5x your original bet.']);
+    end
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HARD TOTALS BASIC STRATEGY FUNCTION:
 function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
