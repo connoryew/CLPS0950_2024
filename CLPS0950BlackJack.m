@@ -170,6 +170,7 @@ if player_total <= 21 & ~black_jack
         shuffle_card(1) = []; % Remove the drawn card from the deck
         [dealer_total, dealer_hand, dealer_display_hand] = adjust_aces(dealer_raw_hand, card_value, dealer_display_hand); % Adjust for Aces
         if dealer_total > 21
+            disp(['Dealer''s Hand: ', strjoin(dealer_display_hand, ', ')]); % Show dealer's hand using display values
             disp(['Dealer''s Total: ', num2str(dealer_total)]);
             disp('Dealer Busts. You win!');
             break; % Dealer busts, end loop
@@ -185,9 +186,10 @@ if player_total <= 21 & ~black_jack
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You win!']);
     elseif player_total < dealer_total && dealer_total <= 21
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. You lose :(']);
-    else (player_total == dealer_total);
+    elseif (player_total == dealer_total)
         disp(['You have ', num2str(player_total), ', and the dealer has ', num2str(dealer_total), '. It''s a push.']);
     end
+
     if black_jack
         disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]);
         if dealer_total == 21 && numel(player_hand) == 2
@@ -195,6 +197,7 @@ if player_total <= 21 & ~black_jack
         end
     end
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HARD TOTALS BASIC STRATEGY FUNCTION:
 function [basic_strat_recommendation] = basic_strategy(dealer_first_card,player_total)
