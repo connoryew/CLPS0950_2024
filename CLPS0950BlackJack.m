@@ -79,7 +79,7 @@ if ~proceed_to_dealer & ~black_jack
             shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
 
             % Adjust aces in player's hand if necessary
-            [player_total, player_hand] = adjust_aces(player_raw_hand,card_value);
+            [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand,card_value,player_display_hand);
 
             % Check if the player's hand is soft or hard after the hit
             is_soft_hand = any(player_hand == 11) && player_total <= 21;
@@ -112,7 +112,7 @@ if ~proceed_to_dealer & ~black_jack
             shuffle_card(1) = []; % Removes the drawn card from the deck for future play.
 
             % Adjust aces in player's hand if necessary
-            [player_total, player_hand] = adjust_aces(player_raw_hand,card_value);
+            [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand,card_value,player_display_hand);
 
             % Check if the player's hand is soft or hard after doubling
             is_soft_hand = any(player_hand == 11) && player_total <= 21;
@@ -310,10 +310,6 @@ function [adjusted_total, adjusted_hand, adjusted_display_hand] = adjust_aces(ha
         aces_as_eleven = find(adjusted_hand == 11); % Find any remaining aces valued at 11 
     end 
 end 
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CURRENT PLACE: 
 % Double Down and Hit logic have been successfully coded for one round of
