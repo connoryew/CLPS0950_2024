@@ -28,13 +28,11 @@ dealer_display_hand = card_display_value(dealer_raw_hand);
 % Correctly set the dealer's first card for display
 dealer_first_card_display = dealer_display_hand{1};  % Use the display value directly
 dealer_first_card = card_value(dealer_raw_hand(1));  % Get the numerical value of the dealer's up-card
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TESTING/DEBUGGING w/ Set Initial Values
  %dealer_first_card = [];
  %player_total = [];
  %player_hand = [];
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
 disp(['Your Initial Cards: ', strjoin(player_display_hand, ', ')]);
@@ -66,7 +64,6 @@ end
 if ~proceed_to_dealer
 disp (['We recommend that you: ', basic_strat_recommendation]);
 end
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HIT/STAND/DOUBLE LOGIC:
 shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
@@ -219,7 +216,7 @@ elseif (dealer_first_card >= 7) && (dealer_first_card <= 11)
         basic_strat_recommendation = 'HIT';
     end
 end
-if player_total == 11 % There's some missing scenarios here, but I'll find and fix those during class tomorrow.
+if player_total == 11 
     if dealer_first_card >= 2 && dealer_first_card <= 10
         basic_strat_recommendation = 'DOUBLE';
     elseif dealer_first_card == 1 
@@ -242,8 +239,6 @@ elseif player_total <= 8
 elseif player_total == 21 
     basic_strat_recommendation = 'STAND';
 end
-% Still need to code for hard totals < 8! I imagine it'll be all hits, but
-% I'll double check that and add it in. 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SOFT TOTALS BASIC STRATEGY FUNCTION:
@@ -318,23 +313,3 @@ function [adjusted_total, adjusted_hand, adjusted_display_hand] = adjust_aces(ha
     end 
 end 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CURRENT PLACE: 
-% Double Down and Hit logic have been successfully coded for one round of
-% play. Basic strategy recommendations are being offered with each
-% additional card dealt to the player. Just added code for the dealer
-% showdown, but we still have issues with things running after the game is
-% supposed to end
-% NEXT STEPS:
-% Code in the card images and have them display during the DISPLAY INITIAL
-% GAME VALUES and after each hit:
-%   1. Use figure, imagesc, and subplot to get the card images where you
-%   want them. Dealer should be easy until showdown because it'll just stay
-%   as one face-up and one face-down.
-%   2. Find a way to accommodate multiple hits. I have no idea what we're
-%   going to do about splits (both gameplay and card image-wise)...
-% Find a way to prevent Dealer Stands conditional from runnning after the
-% dealer busts, and find a way for the game to end after the player busts
-% (ie. the showdown conditionals don't run!)
-% Maybe find a way to use a loop to limit the amount of repetitive
-% copy-pasting needed for the hit logic and basic strategy calculations in
-% subsequent rounds?
