@@ -14,3 +14,6 @@ Cards 2-10 have a value equal to their face value. J, Q, and K each have a value
 6. If either the dealer or the player obtains a series of cards that have a combined value > 21, they have "busted" and lost the round.
 7. If both player and dealer have NOT busted, whoever is closer to 21 w/o going over has won the round
 8. If the player and dealer have NOT busted AND they have cards that sum up to the same value, the result is a PUSH, where neither party wins the round.
+
+**Contributions**
+We completed a majority of this project while working together, so it's difficult to attribute entire sections of code to a specific person. In general, Niki worked a lot on the Hit/Stand/Double/Surrender code, Jilienne put together most of the Soft Total Recommendations and Ace Recalculation code, and Connor did a lot of the debugging and helped with the Game Setup and Hard Total Recommendation sections. During our work sessions, especially near the end of the project, we usually just spent time running sections of the code to try to find errors or incorrect game outcomes and then went in and debugged. Please feel free to reach out to any of us if you have any specific questions about each member's contributions to this project
