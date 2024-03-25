@@ -1,12 +1,7 @@
-% DETERMINE WHAT KIND OF GAME THE PLAYER WANTS TO PLAY
-
-user_input = input('Do you want to play a CUSTOM (c) or RANDOM (r) game of Blackjack?', 's');
-
-
-
+% CLPS0950 Group Project 1: Blackjack!
+% Members: Nicole Chen, Connor Yew, Jilienne Widener
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % SETTING UP THE GAME
 shuffle_card = randperm(52); % "Shuffles" the deck by creating a 1x52 vector of random permutations of integers 1-52
 player_raw_hand = shuffle_card(1:2:3); % Deals the 1st and 3rd values from the vector shuffle_card to the player
@@ -21,22 +16,22 @@ for card_number = 1:52
         card_display_value{card_number} = 'A'; % Display 'A' for Ace
     elseif posit_value > 10 || posit_value == 0 % Uses the modulo operation to pick out the J, Q, and K positions for each suit and sets them to value 10
         card_value(card_number) = 10;
-        card_display_value{card_number} = '10'; 
+        card_display_value{card_number} = '10';
     else
-        card_value(card_number) = posit_value; % Number cards
-        card_display_value{card_number} = num2str(posit_value);
+        card_value(card_number) = posit_value; % Sets the value of cards 2-10 to be equal to their face number.
+        card_display_value{card_number} = num2str(posit_value); % Creates a string corresponding to the card number, which we'll use to represent it when we show the player hand 
     end
 end
 
-% Map raw hands to display hands for player and dealer
+% Creates a set of "display hands" that can be used to show the cards of the dealer and player without just displaying their value (wouldn't work for aces, which change value)
 player_display_hand = card_display_value(player_raw_hand); 
 dealer_display_hand = card_display_value(dealer_raw_hand); 
-% Adjust for aces and update display hands for player and dealer 
+% Run the adjustment for aces and update display hands for player and dealer to  accomodate any dealt aces
 [player_total, player_hand, player_display_hand] = adjust_aces(player_raw_hand, card_value, player_display_hand);
 [dealer_total, dealer_hand, dealer_display_hand] = adjust_aces(dealer_raw_hand, card_value, dealer_display_hand);
 % Correctly set the dealer's first card for display
-dealer_first_card_display = dealer_display_hand{1};  % Use the display value directly
-dealer_first_card = card_value(dealer_raw_hand(1));  % Get the numerical value of the dealer's up-card
+dealer_first_card_display = dealer_display_hand{1};  % Use the display value directly for the dealer's up-card
+dealer_first_card = card_value(dealer_raw_hand(1));  % Store the numerical value of the dealer's up-card
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISPLAYING INITIAL GAME VALUES: Player Hand, Player Total, and Dealer Up-Card
@@ -44,40 +39,40 @@ disp(['Your Initial Cards: ', strjoin(player_display_hand, ', ')]);
 disp(['Your Total: ', num2str(player_total)]);
 disp(['Dealer''s Up-Card: ', dealer_first_card_display]);
 
-%initialize
+% Initialize our two early game-ending conditions to false
 black_jack = false;
 proceed_to_dealer = false;
+surrender = false;
 
 %At the start of the player's turn, check for Blackjack
-if player_total == 21 && numel(player_hand) == 2 %if their first two cards = blacjack
+if player_total == 21 && numel(player_hand) == 2 % If their first two cards add up to 21, the player must have Blackjack
     black_jack = true;
     proceed_to_dealer = true;  % Set a flag to proceed directly to the dealer's turn
 else
-    proceed_to_dealer = false;  %continue with the player's turn normally
+    proceed_to_dealer = false;  % Continue with the player's turn normally
 end
 
 % Check if the player's initial hand is soft or hard and call the appropriate strategy function
 is_soft_hand = any(player_hand == 11) && player_total <= 21; 
 if is_soft_hand
-    % Call the soft hand strategy function 
+    % Call the soft hand strategy function if the hand is soft (contains A)
     basic_strat_recommendation = soft_basic_strategy(dealer_first_card,player_total);
 else
-    % Call the hard hand strategy function
+    % Call the hard hand strategy function (doesn't contain A)
     basic_strat_recommendation = basic_strategy(dealer_first_card, player_total);
 end
 
 if ~proceed_to_dealer
-disp (['We recommend that you: ', basic_strat_recommendation]);
+disp (['We recommend that you: ', basic_strat_recommendation]); % Displays our basic strategy recommendation as long as the playable game is still running
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HIT/STAND/DOUBLE LOGIC:
 shuffle_card = shuffle_card(5:end); % Since the first four cards are already dealt, we can remove them by starting from the fifth card
-%Round two
-%Player's decision pathways
-if ~proceed_to_dealer & ~black_jack
+
+if ~proceed_to_dealer & ~black_jack % Makes sure to skip over the player input portion if the player has already hit a Blackjack or busted
     while true
-        user_input = input('Do you want to HIT (h), DOUBLE (d), or STAND (s)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
+        user_input = input('Do you want to HIT (h), DOUBLE (d), STAND (s), or SURRENDER (sur)? ', 's'); % Asking for player input to determine if they want to hit, double down, or stand
         if user_input == 'h' % Player chooses to HIT
 
             player_raw_hand(end+1) = shuffle_card(1); % Adds the first available card stored in shuffle_card to the player's raw hand
@@ -146,20 +141,26 @@ if ~proceed_to_dealer & ~black_jack
         elseif user_input == 's' % Player chooses to STAND
             break; % We break the loop and proceed with the dealer showdown code
 
+        elseif user_input == 'sur' % Player chooses to SURRENDER
+            proceed_to_dealer = true;
+            surrender = true;
+            break;
+
         else % Accounting for cases where people dont pick an ideal h/d/s key.
             disp('Invalid input. Please choose "h" to HIT, "d" to DOUBLE, or "s" to STAND.');
         end
     end
-    proceed_to_dealer = true; %all break cases leave the while loop, come here instead
+    proceed_to_dealer = true; % All break cases leave the while loop, so this makes sure that we don't show the game state again on our final round through the loop. 
 end
-% Show current state if game continues with the player
+
+% Shows current state if the player chooses an option that continues the game
 if ~proceed_to_dealer
-    disp(['Your cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
-    disp(['Dealer''s up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
+    disp(['Your Cards: ', strjoin(player_display_hand, ', '), ' (Total: ', num2str(player_total), ')']);
+    disp(['Dealer''s Up-card: ', dealer_first_card_display]); % Ensure this uses a display-friendly version too
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEALER SHOWDOWN (Performed once the player has stood or finished doubling down)
-if player_total <= 21 & ~black_jack
+if player_total <= 21 && ~black_jack && ~surrender
     disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]); % Show dealer's second card using display hand
     % Recalculate dealer's total considering the possibility of Ace adjustments not yet applied
     [dealer_total, dealer_hand, dealer_display_hand] = adjust_aces(dealer_raw_hand, card_value, dealer_display_hand);
@@ -193,12 +194,12 @@ if player_total <= 21 & ~black_jack
     end
 end
 
-if black_jack
+if black_jack % Checks if the dealer has Blackjack to determine if the player with a Blackjack wins or pushes
     disp(['Dealer''s Down-Card: ', dealer_display_hand{2}]);
     if dealer_total == 21 && numel(player_hand) == 2
         disp(['You have Blackjack ', num2str(player_total), ', and the dealer has Blackjack ', num2str(dealer_total), '. It''s a push.']);
     else
-        disp(['Blackjack! You win 1.5x your original bet.']);
+        disp('Blackjack! You win 1.5x your original bet.');
     end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -220,9 +221,13 @@ elseif (dealer_first_card >= 7) && (dealer_first_card <= 11)
         basic_strat_recommendation = 'STAND';
     elseif player_total >= 12 && player_total <=16
         basic_strat_recommendation = 'HIT';
+    elseif (player_total == 16) && (dealer_first_card >= 9 && dealer_first_card <= 11)
+        basic_strat_recommendation = 'SURRENDER';
+    elseif (player_total == 15) && (dealer_first_card == 10)
+        basic_strat_recommendation = 'SURRENDER';
     end
 end
-if player_total == 11 % There's some missing scenarios here, but I'll find and fix those during class tomorrow.
+if player_total == 11
     if dealer_first_card >= 2 && dealer_first_card <= 10
         basic_strat_recommendation = 'DOUBLE';
     elseif dealer_first_card == 1 
@@ -245,8 +250,6 @@ elseif player_total <= 8
 elseif player_total == 21 
     basic_strat_recommendation = 'STAND';
 end
-% Still need to code for hard totals < 8! I imagine it'll be all hits, but
-% I'll double check that and add it in. 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SOFT TOTALS BASIC STRATEGY FUNCTION:
@@ -320,24 +323,3 @@ function [adjusted_total, adjusted_hand, adjusted_display_hand] = adjust_aces(ha
         aces_as_eleven = find(adjusted_hand == 11); % Find any remaining aces valued at 11 
     end 
 end 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CURRENT PLACE: 
-% Double Down and Hit logic have been successfully coded for one round of
-% play. Basic strategy recommendations are being offered with each
-% additional card dealt to the player. Just added code for the dealer
-% showdown, but we still have issues with things running after the game is
-% supposed to end
-% NEXT STEPS:
-% Code in the card images and have them display during the DISPLAY INITIAL
-% GAME VALUES and after each hit:
-%   1. Use figure, imagesc, and subplot to get the card images where you
-%   want them. Dealer should be easy until showdown because it'll just stay
-%   as one face-up and one face-down.
-%   2. Find a way to accommodate multiple hits. I have no idea what we're
-%   going to do about splits (both gameplay and card image-wise)...
-% Find a way to prevent Dealer Stands conditional from runnning after the
-% dealer busts, and find a way for the game to end after the player busts
-% (ie. the showdown conditionals don't run!)
-% Maybe find a way to use a loop to limit the amount of repetitive
-% copy-pasting needed for the hit logic and basic strategy calculations in
-% subsequent rounds?
